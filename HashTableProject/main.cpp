@@ -1,13 +1,7 @@
 #include "HashTable.h"
+#include "TextParser.h"
 #include <vector>
 #include <iostream>
-#include <fstream>
-#include <cctype>
-
-// TODO: Implement the function to parse the text file and extract words into a vector.
-void parseTextFile(const std::string& filename, std::vector<std::string>& words) {
-    // TODO: Read the file, extract words, and add them to the 'words' vector.
-}
 
 int main() {
     HashTable ht;
