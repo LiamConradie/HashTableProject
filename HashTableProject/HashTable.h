@@ -23,9 +23,10 @@ private:
     int last_inserted_index;
     int first_inserted_index;
     size_t current_insert_count;
+    size_t collision_count;
 
     size_t hash_function(const std::string& key);
-    size_t find_key(const std::string& key);
+    size_t find_key(const std::string& key, bool count_collisions = false);
 
 public:
     HashTable(size_t cap);
@@ -34,6 +35,7 @@ public:
     std::unique_ptr<int> get(const std::string& key);
     std::unique_ptr<std::pair<std::string, int>> get_last();
     std::unique_ptr<std::pair<std::string, int>> get_first();
+    size_t get_collision_count() const;
 };
 
 #endif // HASHTABLE_H

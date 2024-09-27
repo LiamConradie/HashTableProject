@@ -7,7 +7,7 @@
 
 int main() {
     // Use a large prime number for capacity to reduce collisions
-    HashTable hashTable(200003); // A large prime number for capacity for good distribution
+    HashTable hashTable(21013); // A large prime number for capacity for good distribution
 
     // Step 2: Parse the words from the text file
     std::vector<std::string> words;
@@ -19,6 +19,7 @@ int main() {
         hashTable.insert(words[i], i + 1); // Insert word with some dummy value (like index)
     }
     auto end_insert = std::chrono::high_resolution_clock::now();
+    std::cout << "Total number of collisions during insertions: " << hashTable.get_collision_count() << std::endl;
     std::chrono::duration<double> insert_duration = end_insert - start_insert;
     std::cout << "Time taken to insert " << words.size() << " words: " << insert_duration.count() << " seconds." << std::endl;
 
@@ -43,9 +44,6 @@ int main() {
     std::chrono::duration<double> remove_duration = end_remove - start_remove;
     std::cout << "Time taken to remove 'the': " << remove_duration.count() << " seconds." << std::endl;
 
-    if (!hashTable.get("the")) {
-        std::cout << "'the' key removed successfully." << std::endl;
-    }
 
     // Measure time to get the last and first inserted elements
     auto start_last = std::chrono::high_resolution_clock::now();
