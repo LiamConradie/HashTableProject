@@ -1,6 +1,8 @@
 # HashTableProject
 Part 1: Data Structures and Algorithms
 
+See Solution_Overview.pdf for design comments.
+
 This project implements a hash table using linear probing for collision resolution. It reads a text file, extracts words, and stores them in a fixed-size hash table. The project also supports operations like insertion, removal, lookup, and retrieval of the first and last inserted items in the hash table.
 
 ## Features
