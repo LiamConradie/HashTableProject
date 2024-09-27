@@ -1,79 +1,72 @@
 #include "HashTable.h"
 #include "TextParser.h"
-#include <vector>
 #include <iostream>
-#include <cassert>
+#include <vector>
+#include <string>
+#include <chrono> // For measuring time
 
 int main() {
-    HashTable ht;
+    // Use a large prime number for capacity to reduce collisions
+    HashTable hashTable(200003); // A large prime number for capacity for good distribution
+
+    // Step 2: Parse the words from the text file
     std::vector<std::string> words;
+    parseTextFile("98-0.txt", words); // Parse words from "98-0.txt"
 
-    const int TABLE_SIZE = 10007;
-
-
-    /*
-    // Test 1: Hashing the same string should always give the same result
-    std::string key = "hello";
-    int hash1 = ht.hash(key);
-    int hash2 = ht.hash(key);
-    assert(hash1 == hash2);
-
-    // Test 2: Hashing different strings should give different results
-    std::string key2 = "world";
-    int hash3 = ht.hash(key2);
-    assert(hash1 != hash3);
-
-    // Test 3: Check if the hash value is within the correct range
-    assert(hash1 >= 0 && hash1 < TABLE_SIZE);
-    assert(hash3 >= 0 && hash3 < TABLE_SIZE);
-
-    // Test 4: Hash empty string
-    std::string empty = "";
-    int emptyHash = ht.hash(empty);
-    assert(emptyHash >= 0 && emptyHash < TABLE_SIZE);
-
-    // Test 5: Hash single character
-    std::string singleChar = "a";
-    int singleCharHash = ht.hash(singleChar);
-    assert(singleCharHash >= 0 && singleCharHash < TABLE_SIZE);
-
-    std::cout << "All tests passed!" << std::endl;
-    */
-
-
-
-
-    // TODO: Parse the book text file from Project Gutenberg and populate the 'words' vector.
-    parseTextFile("98-0.txt", words);
-
-    // TODO: Insert each word from the 'words' vector into the hash table with its position as the value.
+    // Step 3: Insert parsed words into the hash table with time measurement
+    auto start_insert = std::chrono::high_resolution_clock::now();
     for (size_t i = 0; i < words.size(); ++i) {
-        ht.insert(words[i], i);
+        hashTable.insert(words[i], i + 1); // Insert word with some dummy value (like index)
+    }
+    auto end_insert = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> insert_duration = end_insert - start_insert;
+    std::cout << "Time taken to insert " << words.size() << " words: " << insert_duration.count() << " seconds." << std::endl;
+
+    // Step 4: Test hash table functionalities with time measurement for 'get'
+    auto start_get = std::chrono::high_resolution_clock::now();
+    std::cout << "Value for 'the': " << *hashTable.get("the") << std::endl;
+    auto end_get = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> get_duration = end_get - start_get;
+    std::cout << "Time taken to get 'the': " << get_duration.count() << " seconds." << std::endl;
+
+    // Test 'and'
+    start_get = std::chrono::high_resolution_clock::now();
+    std::cout << "Value for 'and': " << *hashTable.get("and") << std::endl;
+    end_get = std::chrono::high_resolution_clock::now();
+    get_duration = end_get - start_get;
+    std::cout << "Time taken to get 'and': " << get_duration.count() << " seconds." << std::endl;
+
+    // Remove a word and test the remove operation
+    auto start_remove = std::chrono::high_resolution_clock::now();
+    hashTable.remove("the");
+    auto end_remove = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> remove_duration = end_remove - start_remove;
+    std::cout << "Time taken to remove 'the': " << remove_duration.count() << " seconds." << std::endl;
+
+    if (!hashTable.get("the")) {
+        std::cout << "'the' key removed successfully." << std::endl;
     }
 
-    // TODO: Test the hash table by performing inserts, gets, and removals.
+    // Measure time to get the last and first inserted elements
+    auto start_last = std::chrono::high_resolution_clock::now();
+    auto last = hashTable.get_last();
+    auto end_last = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> last_duration = end_last - start_last;
 
-    try {
-        // TODO: Retrieve and print the most recently inserted or updated key-value pair.
-        auto last = ht.get_last();
-        std::cout << "Last inserted: " << last.first << " => " << last.second << std::endl;
-
-        // TODO: Retrieve and print the least recently inserted or updated key-value pair.
-        auto first = ht.get_first();
-        std::cout << "First inserted: " << first.first << " => " << first.second << std::endl;
-
-        // TODO: Retrieve and print the value for a specific key.
-        int value = ht.get("london");  // Example key
-        std::cout << "'london' found with value: " << value << std::endl;
-
-        // TODO: Remove a key and test the behavior.
-        ht.remove("london");
-        value = ht.get("london");  // This should throw an exception or print an error.
-
+    if (last) {
+        std::cout << "Last inserted key: " << last->first << ", value: " << last->second << std::endl;
     }
-    catch (const std::exception& e) {
-        std::cerr << e.what() << std::endl;
+    std::cout << "Time taken to get the last inserted key: " << last_duration.count() << " seconds." << std::endl;
+
+    auto start_first = std::chrono::high_resolution_clock::now();
+    auto first = hashTable.get_first();
+    auto end_first = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> first_duration = end_first - start_first;
+
+    if (first) {
+        std::cout << "First inserted key: " << first->first << ", value: " << first->second << std::endl;
     }
+    std::cout << "Time taken to get the first inserted key: " << first_duration.count() << " seconds." << std::endl;
 
     return 0;
 }
