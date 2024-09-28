@@ -68,9 +68,11 @@ This project implements a hash table using linear probing for collision resoluti
 - The average time complexity for insertions, lookups, and deletions is **O(1)**.
 
 ## Example Output
+"""
 Total number of collisions during insertions: 699 
 Time taken to insert 141633 words: 0.0918875 seconds. 
 Value for 'the': 141608 Time taken to get 'the': 0.0002807 seconds. 
+"""
 Time taken to remove 'the': 5.5e-06 seconds. 
 Last inserted key: ebooks, value: 141633 
 Time taken to get the last inserted key: 4.7e-06 seconds. 
